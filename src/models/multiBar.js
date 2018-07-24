@@ -226,7 +226,15 @@ nv.models.multiBar = function() {
                     .attr('y', function(d,i,j) { return y0(stacked && !data[j].nonStackable ? d.y0 : 0) || 0 })
                     .attr('height', 0)
                     .attr('width', function(d,i,j) { return x.rangeBand() / (stacked && !data[j].nonStackable ? 1 : data.length) })
-                    .attr('transform', function(d,i) { return 'translate(' + x(getX(d,i)) + ',0)'; })
+                    .attr('transform', function(d,i,j) {
+                        var barsWidth = (x.rangeBand() / (stacked && !data[j].nonStackable ? 1 : data.length));
+                        var sectionWidth = availableWidth/(bars.enter()[0].length - 1);
+                        // if(bars.enter().length == 2)
+                        //     return 'translate(' + ((i-1)*barsWidth + i*barsWidth + (i*(sectionWidth - 2*barsWidth))) + ',0)';
+                        // else
+                            return 'translate(' + ((i-0.5)*barsWidth + i*(sectionWidth - barsWidth)) + ',0)';
+                        // return 'translate(' + x(getX(d,i)) + ',0)';
+                    })
                 ;
             bars
                 .style('fill', function(d,i,j){ return color(d, j, i);  })
@@ -280,7 +288,15 @@ nv.models.multiBar = function() {
                 });
             bars
                 .attr('class', function(d,i) { return getY(d,i) < 0 ? 'nv-bar negative' : 'nv-bar positive'})
-                .attr('transform', function(d,i) { return 'translate(' + x(getX(d,i)) + ',0)'; })
+                .attr('transform', function(d,i,j) {
+                    var barsWidth = (x.rangeBand() / (stacked && !data[j].nonStackable ? 1 : data.length));
+                    var sectionWidth = availableWidth/(bars.enter()[0].length - 1);
+                    // if(bars.enter().length == 2)
+                    //     return 'translate(' + ((i-1)*barsWidth + i*barsWidth + (i*(sectionWidth - 2*barsWidth))) + ',0)';
+                    // else
+                        return 'translate(' + ((i-0.5)*barsWidth + i*(sectionWidth - barsWidth)) + ',0)';
+                    // return 'translate(' + x(getX(d,i)) + ',0)';
+                })
 
             if (barColor) {
                 if (!disabled) disabled = data.map(function() { return true });

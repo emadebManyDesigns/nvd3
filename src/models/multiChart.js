@@ -215,7 +215,7 @@ nv.models.multiChart = function() {
                         return a.map(function(aVal,i){return {x: aVal.x, y: aVal.y + b[i].y}})
                     });
             }
-            if (dataBars1.length) {
+            else if (dataBars1.length) {
                 extraValue1BarStacked.push({x:0, y:0});
             }
 
@@ -228,8 +228,7 @@ nv.models.multiChart = function() {
                         return a.map(function(aVal,i){return {x: aVal.x, y: aVal.y + b[i].y}})
                     });
             }
-
-            if (dataBars2.length) {
+            else if (dataBars2.length) {
               extraValue2BarStacked.push({x:0, y:0});
             }
 
@@ -335,7 +334,8 @@ nv.models.multiChart = function() {
                 evt.series = {
                     value: evt.point.y,
                     color: evt.point.color,
-                    key: evt.series.key
+                    key: evt.series.key,
+                    title: evt.series.title
                 };
                 tooltip
                     .duration(0)
@@ -355,7 +355,8 @@ nv.models.multiChart = function() {
                 evt.series = {
                     value: evt.point.y,
                     color: evt.point.color,
-                    key: evt.series.key
+                    key: evt.series.key,
+                    title: evt.series.title
                 };
                 tooltip
                     .duration(100)
@@ -499,6 +500,7 @@ nv.models.multiChart = function() {
                         if (pointXLocation === undefined) pointXLocation = x(chart.x()(point,pointIndex));
                         allData.push({
                             key: series.key,
+                            title: series.title,
                             value: pointYValue,
                             color: color(series,series.seriesIndex),
                             data: point,

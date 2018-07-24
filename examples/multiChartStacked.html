@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html ng-app="plunker">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Angular-nvD3 Multi Chart</title>
+    <script>document.write('<base href="' + document.location + '" />');</script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.min.js"></script>-->
+    <script src="../build/nv.d3.js"></script>
+    <script src="https://rawgit.com/krispo/angular-nvd3/v1.0.9/dist/angular-nvd3.js"></script>
+    <!--<script src="../../angular-nvd3/dist/angular-nvd3.js"></script>-->
+
+    <style>
+        .dashed {
+            stroke-dasharray: 5,5
+        }
+
+        /* Nascondo le barre verticali */
+        .nv-x .tick line { display: none; }
+
+        /*.nv-series:nth-child(1){ transform: translate(0, 0); }*/
+        /*.nv-series:nth-child(2){ transform: translate(0, 22px); }*/
+        /*.nv-series:nth-child(3){ transform: translate(0, 44px); }*/
+        /*.nv-series:nth-child(4){ transform: translate(0, 66px); }*/
+        /*.nv-series:nth-child(5){ transform: translate(0, 88px); }*/
+        /*.nv-series:nth-child(6){ transform: translate(0, 110px); }*/
+        /*.nv-series:nth-child(7){ transform: translate(0, 132px); }*/
+        /*.nv-series:nth-child(8){ transform: translate(0, 154px); }*/
+        /*.nv-series:nth-child(9){ transform: translate(0, 176px); }*/
+        /*.nv-series:nth-child(10){ transform: translate(0, 198px); }*/
+        /*.nv-series:nth-child(11){ transform: translate(0, 220px); }*/
+        /*.nv-series:nth-child(12){ transform: translate(0, 242px); }*/
+        /*.nv-series:nth-child(13){ transform: translate(0, 264px); }*/
+        /*.nv-legend{ transform: translate(180px, 150px); }*/
+        /*.nv-legendWrap{ transform: translate(-80px, 70px); }*/
+
+        /*.nv-legend-symbol {width: 95px;}*/
+    </style>
+
+    <script>
+        var app = angular.module('plunker', ['nvd3']);
+
+        app.controller('MainCtrl', function($scope) {
+            $scope.options = {
+                chart: {
+                    type: 'multiChart',
+                    height: 450,
+                    margin: {
+                        top: 30,
+                        right: 70,
+                        bottom: 50,
+                        left: 70
+                    },
+                    bars1: {stacked: true },
+                    bars2: {stacked: true},
+                    yDomain1: [0, 10],
+                    yDomain2: [0, 10],
+                    interpolate: 'step',
+                    color: d3.scale.category10().range(),
+                    //showValues: true,
+                    //valueFormat: function(d) {
+                    //    return d3.format(',.4f')(d);
+                    //},
+                    useInteractiveGuideline: true,
+                    duration: 500,
+                    xAxis: {
+                        ticks: 24,
+                        tickFormat: function(d) {
+                            return d3.format(',f')(d);
+                        }
+                    },
+                    yAxis1: {
+                        tickFormat: function(d) {
+                            return d3.format(',.1f')(d);
+                        }
+                    },
+                    yAxis2: {
+                        tickFormat: function(d) {
+                            return d3.format(',.1f')(d);
+                        }
+                    },
+                    // showLegend: false,
+                    legendPosition: 'bottom',
+                    legend: {
+                        vers: 'furious',
+                        // rightAlign: true,
+                        align: false
+					},
+                    interactiveLayer: {
+                        tooltip: {
+                            valueFormatter: function(d) {
+                              return d.toFixed(2);
+                            }
+                        }
+                    }
+                }
+            };
+
+            $scope.data = generateData();
+			//$scope.data = [{key:"pce1qty",values:[{x:1,y:1,y0:0,y1:1},{x:2,y:0,y0:1},{x:3,y:0,y0:1},{x:4,y:1,y0:1,y1:2},{x:5,y:0,y0:2},{x:6,y:0},{x:7,y:0},{x:8,y:0},{x:9,y:0},{x:10,y:0},{x:11,y:0},{x:12,y:0},{x:13,y:0},{x:14,y:0},{x:15,y:0},{x:16,y:0},{x:17,y:0},{x:18,y:0},{x:19,y:0},{x:20,y:0},{x:21,y:0},{x:22,y:0},{x:23,y:0},{x:24,y:0}],title:"PCE offer 1",type:"bar","yAxis":1,color:"#98abc5"},{key:"pce2qty",values:[{x:1,y:3,y0:1,y1:4},{x:2,y:0},{x:3,y:0},{x:4,y:1},{x:5,y:0},{x:6,y:0},{x:7,y:0},{x:8,y:0},{x:9,y:0},{x:10,y:0},{x:11,y:0},{x:12,y:0},{x:13,y:0},{x:14,y:0},{x:15,y:0},{x:16,y:0},{x:17,y:0},{x:18,y:0},{x:19,y:0},{x:20,y:0},{x:21,y:0},{x:22,y:0},{x:23,y:0},{x:24,y:0}],title:"PCE offer 2",type:"bar","yAxis":1,color:"#8a89a6"},{key:"pce3qty",values:[{x:1,y:0},{x:2,y:0},{x:3,y:0},{x:4,y:1},{x:5,y:0},{x:6,y:0},{x:7,y:0},{x:8,y:0},{x:9,y:0},{x:10,y:0},{x:11,y:0},{x:12,y:0},{x:13,y:0},{x:14,y:0},{x:15,y:0},{x:16,y:0},{x:17,y:0},{x:18,y:0},{x:19,y:0},{x:20,y:0},{x:21,y:0},{x:22,y:0},{x:23,y:0},{x:24,y:0}],title:"PCE offer 3",type:"bar","yAxis":1,color:"#7b6888"},{key:"pce4qty",values:[{x:1,y:0},{x:2,y:0},{x:3,y:0},{x:4,y:1},{x:5,y:0},{x:6,y:0},{x:7,y:0},{x:8,y:0},{x:9,y:0},{x:10,y:0},{x:11,y:0},{x:12,y:0},{x:13,y:0},{x:14,y:0},{x:15,y:0},{x:16,y:0},{x:17,y:0},{x:18,y:0},{x:19,y:0},{x:20,y:0},{x:21,y:0},{x:22,y:0},{x:23,y:0},{x:24,y:0}],title:"PCE offer 4",type:"bar","yAxis":1,color:"#6b486b"},{key:"mgp1qty",values:[{x:1,y:1,y0:4,y1:5},{x:2,y:0},{x:3,y:0},{x:4,y:1},{x:5,y:0},{x:6,y:0},{x:7,y:0},{x:8,y:0},{x:9,y:0},{x:10,y:0},{x:11,y:0},{x:12,y:0},{x:13,y:0},{x:14,y:0},{x:15,y:0},{x:16,y:0},{x:17,y:0},{x:18,y:0},{x:19,y:0},{x:20,y:0},{x:21,y:0},{x:22,y:0},{x:23,y:0},{x:24,y:0}],title:"MGP offer 1",type:"bar","yAxis":1,color:"#FFE587"},{key:"mgp2qty",values:[{x:1,y:0},{x:2,y:2},{x:3,y:0},{x:4,y:1},{x:5,y:0},{x:6,y:0},{x:7,y:0},{x:8,y:0},{x:9,y:0},{x:10,y:0},{x:11,y:0},{x:12,y:0},{x:13,y:0},{x:14,y:0},{x:15,y:0},{x:16,y:0},{x:17,y:0},{x:18,y:0},{x:19,y:0},{x:20,y:0},{x:21,y:0},{x:22,y:0},{x:23,y:0},{x:24,y:0}],title:"MGP offer 2",type:"bar","yAxis":1,color:"#FFD859"},{key:"mgp3qty",values:[{x:1,y:0},{x:2,y:0},{x:3,y:3},{x:4,y:1},{x:5,y:0},{x:6,y:0},{x:7,y:0},{x:8,y:0},{x:9,y:0},{x:10,y:0},{x:11,y:0},{x:12,y:0},{x:13,y:0},{x:14,y:0},{x:15,y:0},{x:16,y:0},{x:17,y:0},{x:18,y:0},{x:19,y:0},{x:20,y:0},{x:21,y:0},{x:22,y:0},{x:23,y:0},{x:24,y:0}],title:"MGP offer 3",type:"bar","yAxis":1,color:"#FFC826"},{key:"mgp4qty",values:[{x:1,y:1},{x:2,y:0},{x:3,y:2},{x:4,y:1},{x:5,y:0},{x:6,y:0},{x:7,y:0},{x:8,y:0},{x:9,y:0},{x:10,y:0},{x:11,y:0},{x:12,y:0},{x:13,y:0},{x:14,y:0},{x:15,y:0},{x:16,y:0},{x:17,y:0},{x:18,y:0},{x:19,y:0},{x:20,y:0},{x:21,y:0},{x:22,y:0},{x:23,y:0},{x:24,y:0}],title:"MGP offer 4",type:"bar","yAxis":1,color:"#FFA501"},{key:"pMin",values:[{x:1,y:1},{x:2,y:1},{x:3,y:1},{x:4,y:0},{x:5,y:0},{x:6,y:0},{x:7,y:0},{x:8,y:0},{x:9,y:0},{x:10,y:0},{x:11,y:0},{x:12,y:0},{x:13,y:0},{x:14,y:0},{x:15,y:0},{x:16,y:0},{x:17,y:0},{x:18,y:0},{x:19,y:0},{x:20,y:0},{x:21,y:0},{x:22,y:0},{x:23,y:0},{x:24,y:0}],title:"P. min",type:"line","yAxis":1,color:"green",classed:"dashed"},{key:"pMax",values:[{x:1,y:8},{x:2,y:3},{x:3,y:5},{x:4,y:0},{x:5,y:0},{x:6,y:0},{x:7,y:0},{x:8,y:0},{x:9,y:0},{x:10,y:0},{x:11,y:0},{x:12,y:0},{x:13,y:0},{x:14,y:0},{x:15,y:0},{x:16,y:0},{x:17,y:0},{x:18,y:0},{x:19,y:0},{x:20,y:0},{x:21,y:0},{x:22,y:0},{x:23,y:0},{x:24,y:0}],title:"P. max",type:"line","yAxis":1,color:"red",classed:"dashed"},{key:"posNet",values:[{x:1,y:0},{x:2,y:0},{x:3,y:0},{x:4,y:0},{x:5,y:0},{x:6,y:0},{x:7,y:0},{x:8,y:0},{x:9,y:0},{x:10,y:0},{x:11,y:0},{x:12,y:0},{x:13,y:0},{x:14,y:0},{x:15,y:0},{x:16,y:0},{x:17,y:0},{x:18,y:0},{x:19,y:0},{x:20,y:0},{x:21,y:0},{x:22,y:0},{x:23,y:0},{x:24,y:0}],title:"Pos. net",type:"line","yAxis":1,color:"blue",classed:"solid"}];
+            $scope.data = [{"key":"pce1qty","values":[{"x":1,"y":1,"y0":0,"y1":1,"size":1,"key":"pce1qty","series":0},{"x":2,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":3,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":4,"y":1,"y0":0,"y1":1,"size":1,"key":"pce1qty","series":0},{"x":5,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":6,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":7,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":8,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":9,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":10,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":11,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":12,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":13,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":14,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":15,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":16,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":17,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":18,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":19,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":20,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":21,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":22,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":23,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0},{"x":24,"y":0,"y0":0,"y1":0,"size":0,"key":"pce1qty","series":0}],"title":"PCE offer 1","type":"bar","yAxis":1,"color":"#98abc5"},{"key":"pce2qty","values":[{"x":1,"y":3,"y0":1,"y1":4,"size":3,"key":"pce2qty","series":1},{"x":2,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":3,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":4,"y":1,"y0":1,"y1":2,"size":1,"key":"pce2qty","series":1},{"x":5,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":6,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":7,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":8,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":9,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":10,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":11,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":12,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":13,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":14,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":15,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":16,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":17,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":18,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":19,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":20,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":21,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":22,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":23,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1},{"x":24,"y":0,"y0":0,"y1":0,"size":0,"key":"pce2qty","series":1}],"title":"PCE offer 2","type":"bar","yAxis":1,"color":"#8a89a6"},{"key":"pce3qty","values":[{"x":1,"y":0,"y0":4,"y1":4,"size":0,"key":"pce3qty","series":2},{"x":2,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":3,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":4,"y":1,"y0":2,"y1":3,"size":1,"key":"pce3qty","series":2},{"x":5,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":6,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":7,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":8,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":9,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":10,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":11,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":12,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":13,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":14,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":15,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":16,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":17,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":18,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":19,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":20,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":21,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":22,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":23,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2},{"x":24,"y":0,"y0":0,"y1":0,"size":0,"key":"pce3qty","series":2}],"title":"PCE offer 3","type":"bar","yAxis":1,"color":"#7b6888"},{"key":"pce4qty","values":[{"x":1,"y":0,"y0":4,"y1":4,"size":0,"key":"pce4qty","series":3},{"x":2,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":3,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":4,"y":1,"y0":3,"y1":4,"size":1,"key":"pce4qty","series":3},{"x":5,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":6,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":7,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":8,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":9,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":10,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":11,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":12,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":13,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":14,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":15,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":16,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":17,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":18,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":19,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":20,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":21,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":22,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":23,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3},{"x":24,"y":0,"y0":0,"y1":0,"size":0,"key":"pce4qty","series":3}],"title":"PCE offer 4","type":"bar","yAxis":1,"color":"#6b486b"},{"key":"mgp1qty","values":[{"x":1,"y":1,"y0":4,"y1":5,"size":1,"key":"mgp1qty","series":4},{"x":2,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":3,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":4,"y":1,"y0":4,"y1":5,"size":1,"key":"mgp1qty","series":4},{"x":5,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":6,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":7,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":8,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":9,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":10,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":11,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":12,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":13,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":14,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":15,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":16,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":17,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":18,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":19,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":20,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":21,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":22,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":23,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4},{"x":24,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp1qty","series":4}],"title":"MGP offer 1","type":"bar","yAxis":1,"color":"#FFE587"},{"key":"mgp2qty","values":[{"x":1,"y":0,"y0":5,"y1":5,"size":0,"key":"mgp2qty","series":5},{"x":2,"y":2,"y0":0,"y1":2,"size":2,"key":"mgp2qty","series":5},{"x":3,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":4,"y":1,"y0":5,"y1":6,"size":1,"key":"mgp2qty","series":5},{"x":5,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":6,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":7,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":8,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":9,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":10,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":11,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":12,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":13,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":14,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":15,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":16,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":17,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":18,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":19,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":20,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":21,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":22,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":23,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5},{"x":24,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp2qty","series":5}],"title":"MGP offer 2","type":"bar","yAxis":1,"color":"#FFD859"},{"key":"mgp3qty","values":[{"x":1,"y":0,"y0":5,"y1":5,"size":0,"key":"mgp3qty","series":6},{"x":2,"y":0,"y0":2,"y1":2,"size":0,"key":"mgp3qty","series":6},{"x":3,"y":3,"y0":0,"y1":3,"size":3,"key":"mgp3qty","series":6},{"x":4,"y":1,"y0":6,"y1":7,"size":1,"key":"mgp3qty","series":6},{"x":5,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":6,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":7,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":8,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":9,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":10,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":11,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":12,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":13,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":14,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":15,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":16,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":17,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":18,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":19,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":20,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":21,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":22,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":23,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6},{"x":24,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp3qty","series":6}],"title":"MGP offer 3","type":"bar","yAxis":1,"color":"#FFC826"},{"key":"mgp4qty","values":[{"x":1,"y":1,"y0":5,"y1":6,"size":1,"key":"mgp4qty","series":7},{"x":2,"y":0,"y0":2,"y1":2,"size":0,"key":"mgp4qty","series":7},{"x":3,"y":2,"y0":3,"y1":5,"size":2,"key":"mgp4qty","series":7},{"x":4,"y":1,"y0":7,"y1":8,"size":1,"key":"mgp4qty","series":7},{"x":5,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":6,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":7,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":8,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":9,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":10,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":11,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":12,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":13,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":14,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":15,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":16,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":17,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":18,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":19,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":20,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":21,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":22,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":23,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7},{"x":24,"y":0,"y0":0,"y1":0,"size":0,"key":"mgp4qty","series":7}],"title":"MGP offer 4","type":"bar","yAxis":1,"color":"#FFA501"},{"key":"pMin","values":[{"x":1,"y":1,"series":0},{"x":2,"y":1,"series":0},{"x":3,"y":2,"series":0},{"x":4,"y":0,"series":0},{"x":5,"y":0,"series":0},{"x":6,"y":0,"series":0},{"x":7,"y":0,"series":0},{"x":8,"y":0,"series":0},{"x":9,"y":0,"series":0},{"x":10,"y":0,"series":0},{"x":11,"y":0,"series":0},{"x":12,"y":0,"series":0},{"x":13,"y":0,"series":0},{"x":14,"y":0,"series":0},{"x":15,"y":0,"series":0},{"x":16,"y":0,"series":0},{"x":17,"y":0,"series":0},{"x":18,"y":0,"series":0},{"x":19,"y":0,"series":0},{"x":20,"y":0,"series":0},{"x":21,"y":0,"series":0},{"x":22,"y":0,"series":0},{"x":23,"y":0,"series":0},{"x":24,"y":0,"series":0}],"title":"P. min","type":"line","yAxis":1,"color":"green","classed":"dashed"},{"key":"pMax","values":[{"x":1,"y":8,"series":1},{"x":2,"y":3,"series":1},{"x":3,"y":5,"series":1},{"x":4,"y":0,"series":1},{"x":5,"y":0,"series":1},{"x":6,"y":0,"series":1},{"x":7,"y":0,"series":1},{"x":8,"y":0,"series":1},{"x":9,"y":0,"series":1},{"x":10,"y":0,"series":1},{"x":11,"y":0,"series":1},{"x":12,"y":0,"series":1},{"x":13,"y":0,"series":1},{"x":14,"y":0,"series":1},{"x":15,"y":0,"series":1},{"x":16,"y":0,"series":1},{"x":17,"y":0,"series":1},{"x":18,"y":0,"series":1},{"x":19,"y":0,"series":1},{"x":20,"y":0,"series":1},{"x":21,"y":0,"series":1},{"x":22,"y":0,"series":1},{"x":23,"y":0,"series":1},{"x":24,"y":0,"series":1}],"title":"P. max","type":"line","yAxis":1,"color":"red","classed":"dashed"},{"key":"posNet","values":[{"x":1,"y":0,"series":2},{"x":2,"y":0,"series":2},{"x":3,"y":0,"series":2},{"x":4,"y":0,"series":2},{"x":5,"y":0,"series":2},{"x":6,"y":0,"series":2},{"x":7,"y":0,"series":2},{"x":8,"y":0,"series":2},{"x":9,"y":0,"series":2},{"x":10,"y":0,"series":2},{"x":11,"y":0,"series":2},{"x":12,"y":0,"series":2},{"x":13,"y":0,"series":2},{"x":14,"y":0,"series":2},{"x":15,"y":0,"series":2},{"x":16,"y":0,"series":2},{"x":17,"y":0,"series":2},{"x":18,"y":0,"series":2},{"x":19,"y":0,"series":2},{"x":20,"y":0,"series":2},{"x":21,"y":0,"series":2},{"x":22,"y":0,"series":2},{"x":23,"y":0,"series":2},{"x":24,"y":0,"series":2}],"title":"Pos. net","type":"line","yAxis":1,"color":"blue","classed":"solid"}];
+			console.log($scope.data);
+
+            function generateData(){
+                var testdata = stream_layers(11,24,.1).map(function(data, i) {
+                    return {
+                        key: 'Stream' + i,
+                        values: data.map(function(a){a.y = a.y; a.x = a.x + 1; return a})
+                    };
+                });
+
+                testdata[0].key = "pce1qty"
+                testdata[1].key = "pce2qty"
+                testdata[2].key = "pce3qty"
+                testdata[3].key = "pce4qty"
+                testdata[4].key = "mgp1qty"
+                testdata[5].key = "mgp2qty"
+                testdata[6].key = "mgp3qty"
+                testdata[7].key = "mgp4qty"
+                testdata[8].key = "pMin"
+                testdata[9].key = "pMax"
+                testdata[10].key = "posNet"
+
+                testdata[0].title = "PCE offer 1"
+                testdata[1].title = "PCE offer 2"
+                testdata[2].title = "PCE offer 3"
+                testdata[3].title = "PCE offer 4"
+                testdata[4].title = "MGP offer 1"
+                testdata[5].title = "MGP offer 2"
+                testdata[6].title = "MGP offer 3"
+                testdata[7].title = "MGP offer 4"
+                testdata[8].title = "P. min"
+                testdata[9].title = "P. max"
+                testdata[10].title = "Pos. net"
+
+                testdata[0].type = "bar"
+                testdata[0].yAxis = 1
+                testdata[0].color = '#98abc5'
+                testdata[1].type = "bar"
+                testdata[1].yAxis = 1
+                testdata[1].color = '#8a89a6'
+                testdata[2].type = "bar"
+                testdata[2].yAxis = 1
+                testdata[2].color = '#7b6888'
+                testdata[3].type = "bar"
+                testdata[3].yAxis = 1
+                testdata[3].color = '#6b486b'
+                testdata[4].type = "bar"
+                testdata[4].yAxis = 1
+                testdata[4].color = '#FFE587'
+                testdata[5].type = "bar"
+                testdata[5].yAxis = 1
+                testdata[5].color = '#FFD859'
+                testdata[6].type = "bar"
+                testdata[6].yAxis = 1
+                testdata[6].color = '#FFC826'
+                testdata[7].type = "bar"
+                testdata[7].yAxis = 1
+                testdata[7].color = '#FFA501'
+                testdata[8].type = "line"
+                testdata[8].yAxis = 1
+                testdata[8].color = 'green'
+                testdata[8].classed = 'dashed'
+                testdata[9].type = "line"
+                testdata[9].yAxis = 1
+                testdata[9].color = 'red'
+                testdata[9].classed = 'dashed'
+                testdata[10].type = "line"
+                testdata[10].yAxis = 1
+                testdata[10].color = 'blue'
+
+                return testdata;
+            }
+
+            /* Inspired by Lee Byron's test data generator. */
+            function stream_layers(n, m, o) {
+                if (arguments.length < 3) o = 0;
+                function bump(a) {
+                    var x = 1 / (.1 + Math.random()),
+                        y = 2 * Math.random() - .5,
+                        z = 10 / (.1 + Math.random());
+                    for (var i = 0; i < m; i++) {
+                        var w = (i / m - y) * z;
+                        a[i] += x * Math.exp(-w * w);
+                    }
+                }
+                return d3.range(n).map(function() {
+                    var a = [], i;
+                    for (i = 0; i < m; i++) a[i] = o + o * Math.random();
+                    for (i = 0; i < 5; i++) bump(a);
+                    return a.map(stream_index);
+                });
+            }
+
+            function stream_index(d, i) {
+                return {x: i, y: Math.max(0, d)};
+            }
+        });
+    </script>
+</head>
+
+<body ng-controller="MainCtrl">
+
+<nvd3 options="options" data="data"></nvd3>
+
+</body>
+
+</html>
+
